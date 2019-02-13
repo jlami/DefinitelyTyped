@@ -98,10 +98,13 @@ declare namespace PouchDB {
 
             /** Set which index to use for the query. It can be “design-doc-name” or “[‘design-doc-name’, ‘name’]”. */
             use_index?: string | [string, string];
+            
+            bookmark?: string;
         }
 
         interface FindResponse<Content extends {}> {
             docs: Array<Core.ExistingDocument<Content>>;
+            bookmark?: string;
         }
 
         interface CreateIndexOptions {
@@ -163,9 +166,9 @@ declare namespace PouchDB {
 
     interface Database<Content extends {} = {}> {
         /** Query the API to find some documents. */
-        find(request: Find.FindRequest<Content>,
-             callback: Core.Callback<Find.FindResponse<Content>>): void;
-        find(request?: Find.FindRequest<Content>): Promise<Find.FindResponse<Content>>;
+        find<Model>(request: Find.FindRequest<Content>,
+             callback: Core.Callback<Find.FindResponse<Content & Model>>): void;
+        find<Model>(request?: Find.FindRequest<Content>): Promise<Find.FindResponse<Content & Model>>;
 
         /** Create an index if it doesn't exist, or do nothing if it already exists. */
         createIndex(index: Find.CreateIndexOptions,
